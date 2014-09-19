@@ -1,5 +1,7 @@
 <!DOCTYPE html>
 <html>
+    <head>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <style>
         #publish-dialog {
             width: 700px;
@@ -10,11 +12,11 @@
         }
         #connections-column {
             float: left;
-            width: 300px;
-
+            width: 50%;
         }
         #metadata-column {
             float: left;
+            width: 50%;
         }
         #bottom-section {
             width: 100%;
@@ -41,11 +43,21 @@
             font-weight: bold;
             cursor: pointer;
         }
+        textarea.connection-query {
+            width: 275px;
+            display: none;
+        }
+        .connection-text {
+            height: 64px;
+            border: 1px solid green 
+        }
     </style>
+    </head> 
     <body>
         <div id="publish-dialog">
         <div id="title-bar">
             <h1>Publish New Item</h1>
+            <hr>
         </div>
         <form>
             <div id="connections-column">
@@ -61,17 +73,29 @@
                 
                 {% for connection in connections %}
                 <div class="connection-box external-library">
-                    <input type="checkbox" name="connection{{ connection.id }}" class="private">
-                    {{ connection.name }} ({{ connection.domain }})
+                    <table>
+                        <tr>
+                            <td style="width: 90px">
+                                <input type="checkbox" name="connection{{ connection.id }}" class="private">
+                                <img src="{{ connection.avatar }}" width=64 height=64 align="middle">
+                            </td>
+                            <td>
+                                {{ connection.name }} ({{ connection.domain }})
+                            </td>
+                        </tr>
+                    </table>
+                    <textarea class="connection-query"></textarea>
                 </div>
                 {% endfor %}
             </div>
             <div id="metadata-column">
                 <h2>Metadata</h2>
                 <div class="metadata-container">
-                    <input type="text" name="meta1-key"> = <input type="text" name="meta1-value"> <br>
-                    <input type="text" name="meta2-key"> = <input type="text" name="meta2-value"> <br>
-                    <input type="text" name="meta3-key"> = <input type="text" name="meta3-value"> <br>
+                    {% for item in metadata %}
+                        <input type="text" name="meta{{ forloop.counter0 }}-key" value="{{ item.key }}" {% if not item.editable %}disabled{% endif %}>
+                        =
+                        <input type="text" name="meta{{ forloop.counter0 }}-value" value="{{ item.value }}" {% if not item.editable %}disabled{% endif %}> <br>
+                    {% endfor %}
                 </div>
                 <div class="new-metadata-row">+</div>
             </div>
@@ -79,13 +103,24 @@
             <div style="clear:both"><hr></div>
             
             <div id="bottom-section">
-                <input type="checkbox" name="price"> Attach Price
-                <select name="currency">
-                    <option>BTC</option>
-                    <option>LTC</option>
-                </select>    
-                <input name="purchase-amount">  
-                <input type="submit" value="Publish">      
+                <table style="width: 100%">
+                    <tr>
+                        <td>
+                            <input type="checkbox" name="price"> Attach Price
+                            <input name="purchase-amount">  
+                            <select name="currency">
+                                <option>BTC</option>
+                                <option>LTC</option>
+                            </select>
+                        </td>
+                        <td>
+                            <input type="checkbox" name="encrypt"> Encrypt
+                        </td>
+                        <td>
+                            <input type="submit" value="Publish">
+                        </td>
+                    </tr>
+                </table>      
             </div>
         </form>
         </div>
