@@ -17,12 +17,13 @@
         #metadata-column {
             float: left;
             width: 50%;
+            border: 0px solid green;
         }
         #bottom-section {
             width: 100%;
         }
         .connection-box {
-            width: 280px;
+            width: 90%;
             padding: 3px;
             margin: 4px;
             border: 1px solid gray;
@@ -38,6 +39,9 @@
         .public {
             background-color: #A1FF9A;
         }
+        .metadata-row {
+
+        }
         .new-metadata-row {
             font-size: xx-large;
             font-weight: bold;
@@ -50,6 +54,9 @@
         .connection-text {
             height: 64px;
             border: 1px solid green 
+        }
+        input.metadata-field {
+            width: 11em;
         }
     </style>
     </head> 
@@ -92,9 +99,27 @@
                 <h2>Metadata</h2>
                 <div class="metadata-container">
                     {% for item in metadata %}
-                        <input type="text" name="meta{{ forloop.counter0 }}-key" value="{{ item.key }}" {% if not item.editable %}disabled{% endif %}>
+                    <div class="metadata-row">
+                        <input
+                            class="metadata-field"
+                            type="text"
+                            name="meta{{ forloop.counter0 }}-key"
+                            value="{{ item.key }}"
+                            {% if not item.editable %}disabled{% endif %}
+                        >
                         =
-                        <input type="text" name="meta{{ forloop.counter0 }}-value" value="{{ item.value }}" {% if not item.editable %}disabled{% endif %}> <br>
+                        <input
+                            class="metadata-field"
+                            type="text"
+                            data-index="{{ forloop.counter0 }}"
+                            name="meta{{ forloop.counter0 }}-value"
+                            value="{{ item.value }}"
+                            {% if not item.editable %}disabled{% endif %}
+                        >
+                        {% if item.editable %}
+                        <span class="delete-metadata-row">&Cross;</span>
+                        {% endif %}
+                    </div>
                     {% endfor %}
                 </div>
                 <div class="new-metadata-row">+</div>
@@ -126,9 +151,18 @@
         </div>
         <script>
             $(function() {
-                $('new-metadata-row').click(function() {
-                    var row = '';
-                    $('.metadata-container').append(row);
+                $('.new-metadata-row').click(function() {
+                    var highest_num = null;
+                    $('.metadata-field').each(function(index) {
+                        var index = $(this).data('index');
+                        if(index > highest_num) {
+                            highest_num = index;
+                        }
+                    });
+                    var num = highest_num + 1;
+                    var new_row = $('<input class="metadata-field" type="text" name="meta' + num + '-key"> = <input class="metadata-field" type="text" name="meta' + num + '-value" data-index="' + num + '"> <span class="delete-metadata-row">&Cross;</span>')
+                    
+                    new_row.appendTo($('.metadata-container'))
                 });
             
             });
