@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html>
     <head>
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <style>
         #publish-dialog {
             width: 700px;
@@ -47,8 +46,16 @@
             font-weight: bold;
             cursor: pointer;
         }
-        textarea.connection-query {
-            width: 275px;
+        .delete-metadata-row {
+            cursor: pointer;
+            color: red;
+        }
+        .connection-query {
+            width: 295px;
+            height: 120px;
+        }
+            
+        .connection-query-container {
             display: none;
         }
         .connection-text {
@@ -83,7 +90,7 @@
                     <table>
                         <tr>
                             <td style="width: 90px">
-                                <input type="checkbox" name="connection{{ connection.id }}" class="private">
+                                <input type="checkbox" data-connection-id="{{ connection.id }}" class="connection-checkbox">
                                 <img src="{{ connection.avatar }}" width=64 height=64 align="middle">
                             </td>
                             <td>
@@ -91,7 +98,10 @@
                             </td>
                         </tr>
                     </table>
-                    <textarea class="connection-query"></textarea>
+                    <div class="connection-query-container">
+                        <small>To be added to transfer query:</small>
+                        <textarea class="connection-query query-{{ connection.id }}"></textarea>
+                    </div>
                 </div>
                 {% endfor %}
             </div>
@@ -149,23 +159,7 @@
             </div>
         </form>
         </div>
-        <script>
-            $(function() {
-                $('.new-metadata-row').click(function() {
-                    var highest_num = null;
-                    $('.metadata-field').each(function(index) {
-                        var index = $(this).data('index');
-                        if(index > highest_num) {
-                            highest_num = index;
-                        }
-                    });
-                    var num = highest_num + 1;
-                    var new_row = $('<input class="metadata-field" type="text" name="meta' + num + '-key"> = <input class="metadata-field" type="text" name="meta' + num + '-value" data-index="' + num + '"> <span class="delete-metadata-row">&Cross;</span>')
-                    
-                    new_row.appendTo($('.metadata-container'))
-                });
-            
-            });
-        </script>
+        <script src="/static/jquery-2.1.1.js"></script>
+        <script src="/static/dialog.js"></script>
     </body>
 </html>

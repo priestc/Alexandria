@@ -1,0 +1,3 @@
+arrow
+django==1.7
+simple-crypt
