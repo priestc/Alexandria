@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+    <style>
+        #publish-dialog {
+            width: 700px;
+            border: 1px solid black;
+            overflow: hidden;
+            padding: 5px;
+            border-radius: 10px;
+        }
+        #connections-column {
+            float: left;
+            width: 300px;
+
+        }
+        #metadata-column {
+            float: left;
+        }
+        #bottom-section {
+            width: 100%;
+        }
+        .connection-box {
+            width: 280px;
+            padding: 3px;
+            margin: 4px;
+            border: 1px solid gray;
+            background-color: #9ADBFF;
+        }
+        h1 {
+            padding: 0px;
+            margin: 0px;
+        }
+        .private {
+            background-color: #FF9A9B;
+        }
+        .public {
+            background-color: #A1FF9A;
+        }
+        .new-metadata-row {
+            font-size: xx-large;
+            font-weight: bold;
+            cursor: pointer;
+        }
+    </style>
+    <body>
+        <div id="publish-dialog">
+        <div id="title-bar">
+            <h1>Publish New Item</h1>
+        </div>
+        <form>
+            <div id="connections-column">
+                <h2>Authorizations</h2>
+                
+                <div class="connection-box private">
+                    <input type="checkbox" name="private"> Private
+                </div>
+                
+                <div class="connection-box public">
+                    <input type="checkbox" name="public"> Public
+                </div>
+                
+                {% for connection in connections %}
+                <div class="connection-box external-library">
+                    <input type="checkbox" name="connection{{ connection.id }}" class="private">
+                    {{ connection.name }} ({{ connection.domain }})
+                </div>
+                {% endfor %}
+            </div>
+            <div id="metadata-column">
+                <h2>Metadata</h2>
+                <div class="metadata-container">
+                    <input type="text" name="meta1-key"> = <input type="text" name="meta1-value"> <br>
+                    <input type="text" name="meta2-key"> = <input type="text" name="meta2-value"> <br>
+                    <input type="text" name="meta3-key"> = <input type="text" name="meta3-value"> <br>
+                </div>
+                <div class="new-metadata-row">+</div>
+            </div>
+            
+            <div style="clear:both"><hr></div>
+            
+            <div id="bottom-section">
+                <input type="checkbox" name="price"> Attach Price
+                <select name="currency">
+                    <option>BTC</option>
+                    <option>LTC</option>
+                </select>    
+                <input name="purchase-amount">  
+                <input type="submit" value="Publish">      
+            </div>
+        </form>
+        </div>
+        <script>
+            $(function() {
+                $('new-metadata-row').click(function() {
+                    var row = '';
+                    $('.metadata-container').append(row);
+                });
+            
+            });
+        </script>
+    </body>
+</html>
