@@ -1,6 +1,6 @@
-<!DOCTYPE html>
-<html>
-    <head>
+{% extends "base.html" %}
+
+{% block extra_head %}
     <style>
         #publish-dialog {
             width: 700px;
@@ -66,100 +66,101 @@
             width: 11em;
         }
     </style>
-    </head> 
-    <body>
-        <div id="publish-dialog">
-        <div id="title-bar">
-            <h1>Publish New Item</h1>
-            <hr>
+{% endblock %}
+
+{% block content %}
+    <div id="publish-dialog">
+    <div id="title-bar">
+        <h1>Publish New Item</h1>
+        <hr>
+    </div>
+    <form>
+        <div id="connections-column">
+            <h2>Authorizations</h2>
+            
+            <div class="connection-box private">
+                <input type="checkbox" name="private"> Private
+            </div>
+            
+            <div class="connection-box public">
+                <input type="checkbox" name="public"> Public
+            </div>
+            
+            {% for connection in connections %}
+            <div class="connection-box external-library">
+                <table>
+                    <tr>
+                        <td style="width: 90px">
+                            <input type="checkbox" data-connection-id="{{ connection.id }}" class="connection-checkbox">
+                            <img src="{{ connection.avatar }}" width=64 height=64 align="middle">
+                        </td>
+                        <td>
+                            {{ connection.name }} ({{ connection.domain }})
+                        </td>
+                    </tr>
+                </table>
+                <div class="connection-query-container">
+                    <small>To be added to transfer query:</small>
+                    <textarea class="connection-query query-{{ connection.id }}"></textarea>
+                </div>
+            </div>
+            {% endfor %}
         </div>
-        <form>
-            <div id="connections-column">
-                <h2>Authorizations</h2>
-                
-                <div class="connection-box private">
-                    <input type="checkbox" name="private"> Private
-                </div>
-                
-                <div class="connection-box public">
-                    <input type="checkbox" name="public"> Public
-                </div>
-                
-                {% for connection in connections %}
-                <div class="connection-box external-library">
-                    <table>
-                        <tr>
-                            <td style="width: 90px">
-                                <input type="checkbox" data-connection-id="{{ connection.id }}" class="connection-checkbox">
-                                <img src="{{ connection.avatar }}" width=64 height=64 align="middle">
-                            </td>
-                            <td>
-                                {{ connection.name }} ({{ connection.domain }})
-                            </td>
-                        </tr>
-                    </table>
-                    <div class="connection-query-container">
-                        <small>To be added to transfer query:</small>
-                        <textarea class="connection-query query-{{ connection.id }}"></textarea>
-                    </div>
+        <div id="metadata-column">
+            <h2>Metadata</h2>
+            <div class="metadata-container">
+                {% for item in metadata %}
+                <div class="metadata-row">
+                    <input
+                        class="metadata-field"
+                        type="text"
+                        name="meta{{ forloop.counter0 }}-key"
+                        value="{{ item.key }}"
+                        {% if not item.editable %}disabled{% endif %}
+                    >
+                    =
+                    <input
+                        class="metadata-field"
+                        type="text"
+                        data-index="{{ forloop.counter0 }}"
+                        name="meta{{ forloop.counter0 }}-value"
+                        value="{{ item.value }}"
+                        {% if not item.editable %}disabled{% endif %}
+                    >
+                    {% if item.editable %}
+                    <span class="delete-metadata-row">&Cross;</span>
+                    {% endif %}
                 </div>
                 {% endfor %}
             </div>
-            <div id="metadata-column">
-                <h2>Metadata</h2>
-                <div class="metadata-container">
-                    {% for item in metadata %}
-                    <div class="metadata-row">
-                        <input
-                            class="metadata-field"
-                            type="text"
-                            name="meta{{ forloop.counter0 }}-key"
-                            value="{{ item.key }}"
-                            {% if not item.editable %}disabled{% endif %}
-                        >
-                        =
-                        <input
-                            class="metadata-field"
-                            type="text"
-                            data-index="{{ forloop.counter0 }}"
-                            name="meta{{ forloop.counter0 }}-value"
-                            value="{{ item.value }}"
-                            {% if not item.editable %}disabled{% endif %}
-                        >
-                        {% if item.editable %}
-                        <span class="delete-metadata-row">&Cross;</span>
-                        {% endif %}
-                    </div>
-                    {% endfor %}
-                </div>
-                <div class="new-metadata-row">+</div>
-            </div>
-            
-            <div style="clear:both"><hr></div>
-            
-            <div id="bottom-section">
-                <table style="width: 100%">
-                    <tr>
-                        <td>
-                            <input type="checkbox" name="price"> Attach Price
-                            <input name="purchase-amount">  
-                            <select name="currency">
-                                <option>BTC</option>
-                                <option>LTC</option>
-                            </select>
-                        </td>
-                        <td>
-                            <input type="checkbox" name="encrypt"> Encrypt
-                        </td>
-                        <td>
-                            <input type="submit" value="Publish">
-                        </td>
-                    </tr>
-                </table>      
-            </div>
-        </form>
+            <div class="new-metadata-row">+</div>
         </div>
-        <script src="/static/jquery-2.1.1.js"></script>
-        <script src="/static/dialog.js"></script>
-    </body>
-</html>
+        
+        <div style="clear:both"><hr></div>
+        
+        <div id="bottom-section">
+            <table style="width: 100%">
+                <tr>
+                    <td>
+                        <input type="checkbox" name="price"> Attach Price
+                        <input name="purchase-amount">  
+                        <select name="currency">
+                            <option>BTC</option>
+                            <option>LTC</option>
+                        </select>
+                    </td>
+                    <td>
+                        <input type="checkbox" name="encrypt"> Encrypt
+                    </td>
+                    <td>
+                        <input type="submit" value="Publish">
+                    </td>
+                </tr>
+            </table>      
+        </div>
+    </form>
+    </div>
+{% endblock %}
+{% block js %}
+<script src="/static/dialog.js"></script>
+{% endblock %}

@@ -3,8 +3,7 @@ import hashlib
 
 from django.template.response import TemplateResponse
 
-def publish_dialog(request):
-    connections = [
+CONNECTIONS = [
         {
             'domain': 'obama.com',
             'name': "Barak Obama",
@@ -30,11 +29,25 @@ def publish_dialog(request):
             'avatar': 'http://www.headlinepolitics.com/wp-content/uploads/2014/09/1reagan-128x128.jpg'
         },
     ]
+
+
+def view_connections(request):
+    connections = CONNECTIONS
+    return TemplateResponse(request, "connections.html", locals())
+
+
+def publish_dialog(request):
+    connections = CONNECTIONS
     
     metadata = [
         {
             'key': 'hash',
             'value': hashlib.sha256(b'dsfsdfsdf').hexdigest(),
+            'editable': False,
+        },
+        {
+            'key': 'origin',
+            'value': 'chrispriest.pw',
             'editable': False,
         },
         {

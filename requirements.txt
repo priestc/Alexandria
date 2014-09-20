@@ -1,3 +1,5 @@
 arrow
 django==1.7
 simple-crypt
+requests
+pycrypto
