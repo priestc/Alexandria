@@ -84,5 +84,5 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-
+AUTH_USER_MODEL = 'Alexandria.LibraryUser'
 MY_LIBRARY_DOMAIN = 'libraries.pw'
